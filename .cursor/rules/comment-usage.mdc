@@ -1,0 +1,11 @@
+---
+description: Add comments only for non-obvious, complex code
+alwaysApply: true
+---
+
+# Comment Usage
+
+- Add comments only when the logic is complex or non-obvious.
+- Do not add comments when method names and code structure already make intent clear.
+- Prefer self-explanatory naming over explanatory comments.
+- Keep necessary comments short and focused on the "why", not the "what".
