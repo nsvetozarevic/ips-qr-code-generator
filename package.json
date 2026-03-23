@@ -3,6 +3,9 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "wayfinder:generate": "php artisan wayfinder:generate --with-form --no-interaction",
+        "predev": "npm run wayfinder:generate",
+        "prebuild": "npm run wayfinder:generate",
         "build": "vite build",
         "build:ssr": "vite build && vite build --ssr",
         "dev": "vite",
