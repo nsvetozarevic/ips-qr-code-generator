@@ -1,0 +1,15 @@
+---
+description: Execute plan TODOs one step at a time with approval gates
+alwaysApply: true
+---
+
+# Plan Mode Workflow
+
+When a TODO list is created in plan mode:
+
+1. Work on only one TODO step at a time.
+2. After finishing a step, stop and wait for explicit user approval.
+3. Do not continue to the next step automatically.
+4. Ask: "Ready to move on to the next step?"
+
+This keeps execution reviewable and allows course-corrections between steps.
