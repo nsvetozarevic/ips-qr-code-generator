@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Actions\BuildIpsQrDataStringAction;
+use App\Actions\ExtractPdfTextAction;
+use App\Actions\ParsePaymentSlipPdfAction;
+use App\Contracts\BuildsIpsQrDataString;
+use App\Contracts\ExtractsPdfText;
+use App\Contracts\ParsesPaymentSlipPdf;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(ExtractsPdfText::class, ExtractPdfTextAction::class);
+        $this->app->bind(BuildsIpsQrDataString::class, BuildIpsQrDataStringAction::class);
+        $this->app->bind(ParsesPaymentSlipPdf::class, ParsePaymentSlipPdfAction::class);
     }
 
     /**
