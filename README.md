@@ -12,7 +12,7 @@ The PDF is processed server-side using `pdftotext -layout`, which preserves the 
 
 ## Stack
 
-- **PHP 8.3 / Laravel 13**
+- **PHP 8.4 / Laravel 13**
 - **Inertia.js v2 + Vue 3**
 - **Tailwind CSS v4**
 - **[spatie/pdf-to-text](https://github.com/spatie/pdf-to-text)** — thin wrapper around `pdftotext`
@@ -21,7 +21,7 @@ The PDF is processed server-side using `pdftotext -layout`, which preserves the 
 
 ## Requirements
 
-- PHP 8.3+
+- PHP 8.4+
 - Node 20+
 - `pdftotext` CLI (part of [poppler-utils](https://poppler.freedesktop.org/))
 
