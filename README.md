@@ -24,6 +24,7 @@ The PDF is processed server-side using `pdftotext -layout`, which preserves the 
 - PHP 8.4+
 - Node 20+
 - `pdftotext` CLI (part of [poppler-utils](https://poppler.freedesktop.org/))
+- No database required — all processing is stateless
 
 On macOS:
 ```bash
