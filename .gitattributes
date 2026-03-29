@@ -7,3 +7,6 @@
 *.php diff=php
 
 .github/ export-ignore
+
+resources/js/** linguist-vendored
+resources/css/** linguist-vendored
