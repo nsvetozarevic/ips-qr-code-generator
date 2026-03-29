@@ -6,5 +6,4 @@ enum FrontRoutes: string
 {
     case Home = 'home';
     case Parse = 'parse';
-    case Dashboard = 'dashboard';
 }
