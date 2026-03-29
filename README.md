@@ -12,9 +12,9 @@ The PDF is processed server-side using `pdftotext -layout`, which preserves the 
 
 ## Stack
 
-- **PHP 8.3 / Laravel 13** — backend, routing, validation
-- **Inertia.js v2 + Vue 3** — frontend, no separate API layer needed
-- **Tailwind CSS v4** — styling
+- **PHP 8.3 / Laravel 13**
+- **Inertia.js v2 + Vue 3**
+- **Tailwind CSS v4**
 - **[spatie/pdf-to-text](https://github.com/spatie/pdf-to-text)** — thin wrapper around `pdftotext`
 
 ---
@@ -57,7 +57,7 @@ The `setup` script handles everything: installs dependencies, copies `.env`, gen
 php artisan test
 ```
 
-17 tests covering the PDF parser (including multi-slip PDFs, Cyrillic labels, edge cases in account number extraction), the IPS string builder (amount formatting, reference model fallbacks, checksum validation), and the HTTP layer.
+Tests covering the PDF parser (including multi-slip PDFs, Cyrillic labels, edge cases in account number extraction), the IPS string builder (amount formatting, reference model fallbacks, checksum validation), and the HTTP layer.
 
 ---
 
