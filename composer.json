@@ -1,11 +1,13 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/vue-starter-kit",
+    "name": "nsvetozarevic/ips-qr-code-generator",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Generate IPS QR codes from Serbian payment slip PDFs.",
     "keywords": [
-        "laravel",
-        "framework"
+        "ips",
+        "qr",
+        "serbia",
+        "payment"
     ],
     "license": "MIT",
     "require": {
