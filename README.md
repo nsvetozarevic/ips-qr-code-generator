@@ -6,7 +6,7 @@ Upload a PDF, get the IPS QR code back. Multiple slips per PDF are supported.
 
 The PDF is processed server-side using `pdftotext -layout`, which preserves the two-column structure typical of Serbian payment slips. Fields are parsed and validated against the [NBS IPS QR standard](https://nbs.rs/sr_Latn/stanovnistvo/elektronsko-bankarstvo/ips/index.html) before the QR payload string is assembled. Account number checksums are verified with MOD 97 — if something doesn't pass, the QR isn't generated for that slip rather than silently producing a broken code.
 
-![Screenshot of the IPS QR Generator UI](docs/screenshot.png)
+![Screenshot of the IPS QR Generator UI](resources/assets/screenshot.png)
 
 ---
 
