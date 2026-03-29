@@ -43,12 +43,6 @@ function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function xsrfToken(): string {
-    const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
-
-    return match ? decodeURIComponent(match[1]) : '';
-}
-
 function toggleSlip(index: number): void {
     slipCollapsed.value[index] = !slipCollapsed.value[index];
 }
@@ -116,7 +110,6 @@ async function submitPdf(event: Event): Promise<void> {
         const [response] = await Promise.all([
             fetch('/parse', {
                 method: 'POST',
-                headers: { 'X-XSRF-TOKEN': xsrfToken() },
                 body: formData,
             }),
             sleep(MIN_PROCESSING_MS),
@@ -146,7 +139,7 @@ async function submitPdf(event: Event): Promise<void> {
 </script>
 
 <template>
-    <div class="min-h-screen bg-gradient-to-br from-white via-white to-red-50/50 text-zinc-900 dark:from-zinc-950 dark:via-zinc-950 dark:to-red-950/20 dark:text-white">
+    <div class="min-h-screen bg-gradient-to-br from-gray-100 via-gray-50 to-white text-zinc-900 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-800 dark:text-white">
         <Head title="IPS QR Generator" />
 
         <header class="border-b border-zinc-800 bg-zinc-950">
@@ -163,12 +156,12 @@ async function submitPdf(event: Event): Promise<void> {
             <section class="flex flex-col gap-10">
                 <div class="flex flex-col gap-8 sm:flex-row sm:gap-10">
                     <div class="shrink-0 sm:aspect-square sm:self-stretch">
-                        <AppLogo class="size-28 text-red-600 sm:h-full sm:w-full" />
+                        <AppLogo class="size-28 text-gray-600 sm:h-full sm:w-full" />
                     </div>
 
                     <div class="flex flex-col gap-4 border-b border-zinc-200 pb-10 dark:border-zinc-800">
                         <h1 class="text-5xl font-black tracking-tight sm:text-6xl">
-                            <span class="bg-gradient-to-r from-red-600 to-zinc-900 bg-clip-text text-transparent dark:from-red-500 dark:to-zinc-100">
+                            <span class="bg-gradient-to-r from-gray-700 to-zinc-900 bg-clip-text text-transparent dark:from-gray-300 dark:to-zinc-100">
                                 IPS QR Generator
                             </span>
                         </h1>
@@ -200,7 +193,7 @@ async function submitPdf(event: Event): Promise<void> {
                     <Button
                         type="submit"
                         :disabled="processing"
-                        class="w-fit bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600/50"
+                        class="w-fit bg-gray-700 text-white hover:bg-gray-800 focus-visible:ring-gray-600/50"
                     >
                         <Spinner v-if="processing" />
                         {{ processing ? 'Parsing…' : 'Generate QR code' }}
@@ -236,21 +229,21 @@ async function submitPdf(event: Event): Promise<void> {
 
             <section v-else-if="results.length > 0 && !confirmed" class="flex flex-col gap-4">
                 <div class="flex items-center gap-3">
-                    <span class="shrink-0 text-xs font-semibold uppercase tracking-widest text-red-600">
+                    <span class="shrink-0 text-xs font-semibold uppercase tracking-widest text-gray-500">
                         {{ results.length }} {{ results.length === 1 ? 'slip' : 'slips' }} parsed
                     </span>
-                    <div class="h-px flex-1 bg-red-200 dark:bg-red-900/40" />
+                    <div class="h-px flex-1 bg-gray-300 dark:bg-gray-700/40" />
                 </div>
 
                 <div class="rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-                    <div class="border-l-4 border-l-red-600 p-6">
+                    <div class="border-l-4 border-l-gray-500 p-6">
                         <p class="font-semibold text-zinc-900 dark:text-white">Verify before scanning</p>
                         <p class="mt-1.5 max-w-lg text-sm text-zinc-500 dark:text-zinc-400">
                             This data was automatically extracted from your PDF. Before using any QR code,
                             confirm the recipient name, account number and amount match your original payment slip exactly.
                         </p>
                         <Button
-                            class="mt-5 bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600/50"
+                            class="mt-5 bg-gray-700 text-white hover:bg-gray-800 focus-visible:ring-gray-600/50"
                             @click="confirmed = true"
                         >
                             Show QR codes
@@ -261,10 +254,10 @@ async function submitPdf(event: Event): Promise<void> {
 
             <section v-else-if="results.length > 0 && confirmed" class="flex flex-col gap-4">
                 <div class="flex items-center gap-3">
-                    <span class="shrink-0 text-xs font-semibold uppercase tracking-widest text-red-600">
+                    <span class="shrink-0 text-xs font-semibold uppercase tracking-widest text-gray-500">
                         {{ results.length }} {{ results.length === 1 ? 'slip' : 'slips' }} parsed
                     </span>
-                    <div class="h-px flex-1 bg-red-200 dark:bg-red-900/40" />
+                    <div class="h-px flex-1 bg-gray-300 dark:bg-gray-700/40" />
                 </div>
 
                 <article
@@ -280,7 +273,7 @@ async function submitPdf(event: Event): Promise<void> {
                         <div class="flex items-center gap-3">
                             <span
                                 v-if="slip.ipsQrData"
-                                class="text-xs font-semibold text-red-500"
+                                class="text-xs font-semibold text-gray-400"
                             >
                                 ● QR ready
                             </span>
@@ -323,7 +316,7 @@ async function submitPdf(event: Event): Promise<void> {
                                     </div>
                                     <div v-if="slip.amount" class="flex flex-col gap-1">
                                         <dt class="text-xs text-zinc-400">Amount</dt>
-                                        <dd class="text-sm font-bold text-red-600">{{ slip.currency?.toUpperCase() }} {{ slip.amount }}</dd>
+                                        <dd class="text-sm font-bold text-gray-700 dark:text-gray-200">{{ slip.currency?.toUpperCase() }} {{ slip.amount }}</dd>
                                     </div>
                                     <div v-if="slip.purpose" class="flex flex-col gap-1">
                                         <dt class="text-xs text-zinc-400">Purpose</dt>
