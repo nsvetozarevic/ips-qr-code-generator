@@ -2,11 +2,11 @@
 
 namespace App\Data\Slip;
 
-class PaymentDetails
+readonly class PaymentDetails
 {
     public function __construct(
-        public readonly ?string $paymentCode = null,
-        public readonly ?string $currency = null,
-        public readonly ?string $amount = null,
+        public ?string $paymentCode = null,
+        public ?string $currency = null,
+        public ?string $amount = null,
     ) {}
 }

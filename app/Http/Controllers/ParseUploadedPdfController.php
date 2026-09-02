@@ -8,7 +8,7 @@ use App\Http\Requests\UploadPaymentSlipRequest;
 use App\Http\Resources\SlipResultResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class ParseUploadedPdfController extends Controller
+class ParseUploadedPdfController
 {
     public function __construct(
         private readonly ExtractsPdfText $extractPdfText,

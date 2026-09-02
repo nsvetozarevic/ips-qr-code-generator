@@ -2,10 +2,10 @@
 
 namespace App\Data\Slip;
 
-class ModelReference
+readonly class ModelReference
 {
     public function __construct(
-        public readonly ?string $model = null,
-        public readonly ?string $referenceNumber = null,
+        public ?string $model = null,
+        public ?string $referenceNumber = null,
     ) {}
 }
