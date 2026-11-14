@@ -67,9 +67,9 @@ class BuildIpsQrDataStringAction implements BuildsIpsQrDataString
 
     private function formatAmount(string $amount, string $currency): ?string
     {
-        $normalized = str_replace(',', '.', $amount);
+        $normalized = $this->normalizeNumericAmount($amount);
 
-        if (! is_numeric($normalized)) {
+        if ($normalized === null) {
             return null;
         }
 
@@ -80,6 +80,26 @@ class BuildIpsQrDataStringAction implements BuildsIpsQrDataString
         return $cents === 0
             ? sprintf('%s%d,', mb_strtoupper($currency), $whole)
             : sprintf('%s%d,%02d', mb_strtoupper($currency), $whole, $cents);
+    }
+
+    /**
+     * Serbian slips print grouped amounts as 58.644,02. A plain comma-to-dot
+     * swap leaves the thousands dots in place, and is_numeric() then rejects it.
+     */
+    private function normalizeNumericAmount(string $amount): ?string
+    {
+        $amount = trim($amount);
+
+        if (str_contains($amount, ',') && str_contains($amount, '.')) {
+            $decimalSeparator = strrpos($amount, ',') > strrpos($amount, '.') ? ',' : '.';
+            $thousandsSeparator = $decimalSeparator === ',' ? '.' : ',';
+            $amount = str_replace($thousandsSeparator, '', $amount);
+            $amount = str_replace($decimalSeparator, '.', $amount);
+        } elseif (str_contains($amount, ',')) {
+            $amount = str_replace(',', '.', $amount);
+        }
+
+        return is_numeric($amount) ? $amount : null;
     }
 
     private function buildPozivNaBroj(ParsedSlipData $slip): ?string

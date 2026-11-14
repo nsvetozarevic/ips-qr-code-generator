@@ -35,6 +35,7 @@ class ParsePaymentSlipPdfAction implements ParsesPaymentSlipPdf
 
     public function __invoke(string $text): array
     {
+        $text = str_replace("\f", "\n", $text);
         $results = [];
 
         foreach ($this->splitIntoSlipBlocks($text) as $block) {
@@ -196,6 +197,15 @@ class ParsePaymentSlipPdfAction implements ParsesPaymentSlipPdf
         $rightLines = [];
 
         foreach (explode("\n", $block) as $line) {
+            // A centered footer such as "образац бр.3" straddles the column cut.
+            // Slicing it first leaves a stray letter that is later read as a field.
+            if ($this->isIgnoredFooterLine(trim($line))) {
+                $leftLines[] = '';
+                $rightLines[] = '';
+
+                continue;
+            }
+
             [$left, $right] = $this->splitByColumn($line, self::COLUMN_BOUNDARY);
             $leftLines[] = $left;
             $rightLines[] = $right;

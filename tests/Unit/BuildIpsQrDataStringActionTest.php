@@ -36,6 +36,34 @@ class BuildIpsQrDataStringActionTest extends TestCase
         );
     }
 
+    public function test_formats_serbian_amount_with_thousands_separator(): void
+    {
+        $withCents = $this->slip(
+            payee: 'Ministarstvo finansija RS PU',
+            recipientAccount: '840-4848-37',
+            amount: '58.644,02',
+            currency: 'RSD',
+            paymentCode: '254',
+            purpose: 'PID-10-2026',
+            creditorModel: '97',
+            creditorReferenceNumber: '3691000000065924821',
+        );
+
+        $whole = $this->slip(
+            payee: 'Nikola Svetozarević',
+            recipientAccount: '160-5400100874330-77',
+            amount: '100.000,00',
+            currency: 'RSD',
+            paymentCode: '240',
+        );
+
+        $this->assertSame(
+            'K:PR|V:01|C:1|R:840000000000484837|N:Ministarstvo finansija RS PU|I:RSD58644,02|SF:254|S:PID-10-2026|RO:973691000000065924821',
+            ($this->action)($withCents),
+        );
+        $this->assertStringContainsString('I:RSD100000,', (string) ($this->action)($whole));
+    }
+
     public function test_formats_amount_with_cents(): void
     {
         $slip = $this->slip(
@@ -68,6 +96,27 @@ class BuildIpsQrDataStringActionTest extends TestCase
 
         $this->assertNotNull($result);
         $this->assertStringContainsString('RO:9799887766', $result);
+    }
+
+    public function test_replaces_em_dash_in_text_fields(): void
+    {
+        $slip = $this->slip(
+            payee: 'Nikola — Svetozarević',
+            recipientAccount: '160-5400100874330-77',
+            amount: '100.000,00',
+            currency: 'RSD',
+            paymentCode: '240',
+            purpose: 'Zarada — osnivač 10-2026',
+            creditorReferenceNumber: '36—910',
+        );
+
+        $result = ($this->action)($slip);
+
+        $this->assertNotNull($result);
+        $this->assertStringContainsString('N:Nikola - Svetozarević', $result);
+        $this->assertStringContainsString('S:Zarada - osnivač 10-2026', $result);
+        $this->assertStringContainsString('RO:36-910', $result);
+        $this->assertStringNotContainsString('—', $result);
     }
 
     public function test_returns_null_for_invalid_account_checksum(): void

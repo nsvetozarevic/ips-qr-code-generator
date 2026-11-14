@@ -108,6 +108,29 @@ class ParsePaymentSlipPdfActionTest extends TestCase
         $this->assertSame('98765432', $slips[0]->parsed->creditorReferenceNumber);
     }
 
+    public function test_replaces_em_dash_in_parsed_text_fields(): void
+    {
+        $text = implode("\n\n", [
+            'НАЛОГ ЗА ПРЕНОС',
+            "платилац\nINVITIOUS — DOO",
+            "сврха плаћања\nZarada — osnivač — 10-2026",
+            "прималац\nNikola — Svetozarević",
+            'шифра плаћања',
+            'рачун платиоца',
+            'модел и позив на број (задужење)',
+            'рачун примаоца',
+            "модел и позив на број (одобрења)\n97 36—910",
+        ]);
+
+        $slips = ($this->action)($text);
+
+        $this->assertCount(1, $slips);
+        $this->assertSame('INVITIOUS - DOO', $slips[0]->parsed->payer);
+        $this->assertSame('Zarada - osnivač - 10-2026', $slips[0]->parsed->purpose);
+        $this->assertSame('Nikola - Svetozarević', $slips[0]->parsed->payee);
+        $this->assertSame('36-910', $slips[0]->parsed->creditorReferenceNumber);
+    }
+
     public function test_extracts_recipient_account_when_same_line_has_address_fragment(): void
     {
         $text = sprintf(
@@ -129,6 +152,36 @@ class ParsePaymentSlipPdfActionTest extends TestCase
         $this->assertSame('840-4848-37', $slips[0]->parsed->recipientAccount);
         $this->assertStringContainsString('Ministarstvo', $slips[0]->parsed->payee);
         $this->assertStringContainsString('ića 3-5', $slips[0]->parsed->payee);
+    }
+
+    public function test_blank_copy_is_skipped_when_footer_crosses_the_column_boundary(): void
+    {
+        $text = implode("\n", [
+            'НАЛОГ ЗА ПРЕНОС',
+            'платилац',
+            str_repeat(' ', 64).'шифра',
+            'прималац',
+            str_repeat(' ', 54).'образац бр.3',
+        ]);
+
+        $slips = ($this->action)($text);
+
+        $this->assertSame([], $slips);
+    }
+
+    public function test_page_break_is_not_read_as_a_slip_field(): void
+    {
+        $text = implode("\n", [
+            'НАЛОГ ЗА ПРЕНОС',
+            'платилац',
+            str_repeat(' ', 64).'шифра',
+            'прималац',
+            "\f",
+        ]);
+
+        $slips = ($this->action)($text);
+
+        $this->assertSame([], $slips);
     }
 
     public function test_returns_empty_array_for_blank_text(): void
